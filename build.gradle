@@ -17,27 +17,51 @@ buildscript {
 
 plugins {
     id 'com.gradle.plugin-publish' version '0.16.0'
+    id 'maven-publish'
 }
 allprojects {
     apply plugin: 'com.palantir.java-format'
 }
 
+
+
 repositories {
     mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
 }
 
-apply plugin: 'com.palantir.external-publish'
-apply plugin: 'java-gradle-plugin'
-apply plugin: 'groovy'
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.airbyte'
+            artifactId = 'gradle-docker'
+        }
+    }
+
+    repositories {
+        maven {
+            url 'https://airbyte.mycloudrepo.io/repositories/airbyte-public-jars'
+            credentials {
+                name 'cloudrepo'
+                username System.getenv('CLOUDREPO_USER')
+                password System.getenv('CLOUDREPO_PASSWORD')
+            }
+        }
+
+        mavenLocal()
+    }
+}
+
+//apply plugin: 'com.palantir.external-publish'
+apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'com.palantir.baseline'
 apply plugin: 'com.palantir.consistent-versions'
 apply plugin: 'com.palantir.git-version'
 apply plugin: 'org.inferred.processors'
-apply plugin: 'com.palantir.external-publish-jar'
+//apply plugin: 'com.palantir.external-publish-jar'
 apply plugin: 'com.palantir.baseline-java-versions'
 apply plugin: 'com.palantir.jdks.latest'
 
-group 'com.palantir.gradle.docker'
+group 'io.airbyte.gradle.docker'
 version System.env.CIRCLE_TAG ?: gitVersion()
 
 dependencies {
@@ -50,8 +74,8 @@ dependencies {
 
 
 pluginBundle {
-    website = 'https://github.com/palantir/gradle-docker'
-    vcsUrl = 'https://github.com/palantir/gradle-docker'
+    website = 'https://github.com/airbytehq/gradle-docker'
+    vcsUrl = 'https://github.com/airbytehq/gradle-docker'
     description = 'Gradle Docker is a simple docker orchestrator for executing docker build and push from within Gradle.'
     tags = ['docker']
 

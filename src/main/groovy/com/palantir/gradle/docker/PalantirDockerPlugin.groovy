@@ -196,6 +196,12 @@ class PalantirDockerPlugin implements Plugin<Project> {
         if (ext.noCache) {
             buildCommandLine.add '--no-cache'
         }
+        if (ext.cacheFrom != null) {
+            buildCommandLine.addAll('--cache-from', ext.cacheFrom)
+        }
+        if (ext.cacheTo) {
+            buildCommandLine.addAll("--cache-to", ext.cacheTo)
+        }
         if (ext.getNetwork() != null) {
             buildCommandLine.addAll('--network', ext.network)
         }

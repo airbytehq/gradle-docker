@@ -41,6 +41,8 @@ class DockerExtension {
     private Map<String, String> buildArgs = ImmutableMap.of()
     private boolean pull = false
     private boolean noCache = false
+    private String cacheFrom = null
+    private String cacheTo = null
     private String network = null
     private boolean buildx = false
     private Set<String> platform = ImmutableSet.of()
@@ -179,6 +181,22 @@ class DockerExtension {
 
     public void noCache(boolean noCache) {
         this.noCache = noCache
+    }
+
+    public String getCacheFrom() {
+        return cacheFrom
+    }
+
+    public void cacheFrom(String cacheFrom) {
+        this.cacheFrom = cacheFrom
+    }
+
+    public String getCacheTo() {
+        return cacheTo
+    }
+
+    public void cacheTo(String cacheTo) {
+        this.cacheTo = cacheTo
     }
 
     public boolean getLoad() {

@@ -1,3 +1,2 @@
-rootProject.name = 'com.palantir.docker.gradle.plugin'
-
+rootProject.name = 'gradle-docker'
 

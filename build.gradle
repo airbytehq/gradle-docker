@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        //mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
-        //gradlePluginPortal() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
+        mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
+        gradlePluginPortal() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
     }
     dependencies {
         classpath 'com.palantir.gradle.jdks:gradle-jdks:0.27.0'
@@ -27,16 +27,16 @@ allprojects {
 
 
 repositories {
-    //mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
+    mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
 }
 
 publishing {
-    //publications {
-    //    maven(MavenPublication) {
-    //        groupId = 'com.palantir.docker'
-    //        artifactId = 'com.palantir.docker.gradle.plugin'
-    //    }
-    //}
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.palantir.docker'
+            artifactId = 'com.palantir.docker.gradle.plugin'
+        }
+    }
 
     repositories {
         maven {
@@ -53,7 +53,8 @@ publishing {
 }
 
 //apply plugin: 'com.palantir.external-publish'
-//apply plugin: 'com.gradle.plugin-publish'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'groovy'
 apply plugin: 'com.palantir.baseline'
 apply plugin: 'com.palantir.consistent-versions'
 apply plugin: 'com.palantir.git-version'
@@ -110,7 +111,7 @@ javaVersions {
 gradlePlugin {
     plugins {
         docker {
-            id = 'com.palantir.docker'
+            id = 'com.palantir.gradle.docker'
             implementationClass = 'com.palantir.gradle.docker.PalantirDockerPlugin'
         }
     }

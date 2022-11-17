@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
-        gradlePluginPortal() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
+        //mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
+        //gradlePluginPortal() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
     }
     dependencies {
         classpath 'com.palantir.gradle.jdks:gradle-jdks:0.27.0'
@@ -16,8 +16,9 @@ buildscript {
 }
 
 plugins {
-    id 'com.gradle.plugin-publish' version '0.16.0'
+    //id 'com.gradle.plugin-publish' version '0.16.0'
     id 'maven-publish'
+    id 'java-gradle-plugin'
 }
 allprojects {
     apply plugin: 'com.palantir.java-format'
@@ -26,16 +27,16 @@ allprojects {
 
 
 repositories {
-    mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
+    //mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'io.airbyte'
-            artifactId = 'gradle-docker'
-        }
-    }
+    //publications {
+    //    maven(MavenPublication) {
+    //        groupId = 'com.palantir.docker'
+    //        artifactId = 'com.palantir.docker.gradle.plugin'
+    //    }
+    //}
 
     repositories {
         maven {
@@ -52,7 +53,7 @@ publishing {
 }
 
 //apply plugin: 'com.palantir.external-publish'
-apply plugin: 'com.gradle.plugin-publish'
+//apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'com.palantir.baseline'
 apply plugin: 'com.palantir.consistent-versions'
 apply plugin: 'com.palantir.git-version'
@@ -61,7 +62,7 @@ apply plugin: 'org.inferred.processors'
 apply plugin: 'com.palantir.baseline-java-versions'
 apply plugin: 'com.palantir.jdks.latest'
 
-group 'io.airbyte.gradle.docker'
+group 'com.palantir.docker'
 version System.env.CIRCLE_TAG ?: gitVersion()
 
 dependencies {
@@ -73,35 +74,48 @@ dependencies {
 }
 
 
-pluginBundle {
-    website = 'https://github.com/airbytehq/gradle-docker'
-    vcsUrl = 'https://github.com/airbytehq/gradle-docker'
-    description = 'Gradle Docker is a simple docker orchestrator for executing docker build and push from within Gradle.'
-    tags = ['docker']
+//pluginBundle {
+//    website = 'https://github.com/airbytehq/gradle-docker'
+//    vcsUrl = 'https://github.com/airbytehq/gradle-docker'
+//    description = 'Gradle Docker is a simple docker orchestrator for executing docker build and push from within Gradle.'
+//    tags = ['docker']
+//
+//    plugins {
+//        dockerPlugin {
+//            id = 'com.palantir.docker'
+//            displayName = 'Palantir Gradle Docker'
+//        }
+//        dockerComposePlugin {
+//            id = 'com.palantir.docker-compose'
+//            displayName = 'Palantir Gradle Docker-Compose'
+//        }
+//        dockerRunPlugin {
+//            id = 'com.palantir.docker-run'
+//            displayName = 'Palantir Gradle Docker-Run'
+//        }
+//    }
+//}
 
-    plugins {
-        dockerPlugin {
-            id = 'com.palantir.docker'
-            displayName = 'Palantir Gradle Docker'
-        }
-        dockerComposePlugin {
-            id = 'com.palantir.docker-compose'
-            displayName = 'Palantir Gradle Docker-Compose'
-        }
-        dockerRunPlugin {
-            id = 'com.palantir.docker-run'
-            displayName = 'Palantir Gradle Docker-Run'
-        }
-    }
-}
-
-publishPlugins.onlyIf { versionDetails().isCleanTag }
+//publishPlugins.onlyIf { versionDetails().isCleanTag }
 
 // Configure the publishPlugins task
-tasks.publish.dependsOn publishPlugins
+//tasks.publish.dependsOn publishPlugins
 project.ext.'gradle.publish.key' = System.env["GRADLE_KEY"]
 project.ext.'gradle.publish.secret' = System.env["GRADLE_SECRET"]
 
 javaVersions {
     libraryTarget = 11
+}
+
+gradlePlugin {
+    plugins {
+        docker {
+            id = 'com.palantir.docker'
+            implementationClass = 'com.palantir.gradle.docker.PalantirDockerPlugin'
+        }
+    }
+}
+
+tasks.withType(Copy) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
